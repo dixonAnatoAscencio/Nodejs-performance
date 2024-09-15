@@ -1,6 +1,6 @@
 const express = require("express");
-const cluster = require("cluster");
-const os = require("os");
+//const cluster = require("cluster");
+//const os = require("os");
 
 const app = express();
 
@@ -15,22 +15,24 @@ app.get("/", (req, res) => {
 function delay(duration) {
   const startTime = Date.now();
   while (Date.now() - startTime < duration) {
-    // Busy-wait loop to simulate delay
+    // event loop is blocked 
   }
 }
 
 app.get("/timer", (req, res) => {
-  delay(9000);
+  delay(4000);
   res.send(`Delayed response: ${process.pid}`);
 });
 
-if (cluster.isMaster) {
-console.log("Master has been started");
-  const cpus = os.cpus().length;
-  for (let i = 0; i < cpus; i++) {
-    cluster.fork();
-  }
-} else {
-  console.log("Worker process started");
+//Zero downtime Restart
+//pm2 reload server.js --> Reinicia el servidor 1 por 1 dejando un tiempo de inactividad, sin bloqueo total del servidor
+//Garantiza que no se caiga el servidor 
+
+//pm2 start server.js
+//pm2 monit
+//pm2 startup
+//pm2 save
+
+
   app.listen(3000);
-}
+
